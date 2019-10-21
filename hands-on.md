@@ -21,4 +21,16 @@
 
 ### 02_BuildModelImage
 #### 01_Creating an Iris Model Image
+- このディレクトリで下記を作成。
+    - 推論用のDockerfileを作成
+    - 推論用の`app.py`ファイルを作成
+    - CodeBuildが読み込むためのbuildspec.yml
 
+- CodeCommitのgitリポジトリへ作成したファイルをコピー
+- CodeCommitへpush
+- CodePipeline が発火され、CodeBuildが走る
+    - CodeBuild の中でDocker Image がビルドされてECRへプッシュされる
+ 
+ ### 03_Training our custom model 
+ - s3へデータをアップロードすると、CodePipelineが発火
+ - Pipeline中のBuildでLambdaで学習
