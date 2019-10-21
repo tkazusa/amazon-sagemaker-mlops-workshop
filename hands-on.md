@@ -32,5 +32,10 @@
     - CodeBuild の中でDocker Image がビルドされてECRへプッシュされる
  
  ### 03_Training our custom model 
- - s3へデータをアップロードすると、CodePipelineが発火
- - Pipeline中のBuildでLambdaで学習
+ - Souce: s3へデータをアップロードすると、CodePipelineが発火
+ - Train: Pipeline中のBuildでLambdaで学習
+    - Lambda がsagemakerの学習と学習のチェックを監視
+ - TrainApproval: マニュアルで学習を認証
+ - DeployDev: Dev環境にモデルをデプロイ
+ - DeployApproval: 承認
+ - DeployPrd: 
