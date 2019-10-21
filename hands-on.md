@@ -1,10 +1,23 @@
 ## CloudFormationi によるAWSリソースのプロビジョニング
 - 活用するサービスが多いので CloudFormation でハンズオンの準備をする
 
-### CloudFormation の特徴
-- 変更のプレビュー
-- 依存関係の管理
-- クロスアカウントとクロスリージョンの管理
+## 使うスクリプトの整理
+## m.yml
+- Scikit-base のECRのリポジトリ
+- Iris-model のECRのリポジトリ
+- MLOps S3 バケット
+- CodeCommit のリポジトリ
+- ノートブックインスタンス
+    - サブネットの定義
+    - セキュリティグループの定義
+    - ノートブックインスタンスのライフサイクルの設定
+        -  この中でのCFn使ってリソースつくている
+            - build-image.yml sikit_base
+            - build-image.yml iris_model
+            - train-model-pipeline.yml 
+- CloudBuild用のIAMロール
+- SageMaker用のIAMロール
+
 
 
 ## ハンズオンの内容
