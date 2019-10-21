@@ -31,11 +31,13 @@
 - CodePipeline が発火され、CodeBuildが走る
     - CodeBuild の中でDocker Image がビルドされてECRへプッシュされる
  
- ### 03_Training our custom model 
+ #### 03_Training our custom model 
  - Souce: s3へデータをアップロードすると、CodePipelineが発火
  - Train: Pipeline中のBuildでLambdaで学習
     - Lambda がsagemakerの学習と学習のチェックを監視
  - TrainApproval: マニュアルで学習を認証
  - DeployDev: Dev環境にモデルをデプロイ
  - DeployApproval: 承認
- - DeployPrd: 
+ - DeployPrd:
+ #### 04_Check Progress and Test the endpoint
+ - パイプラインの監視と、エンドポイントの動作確認
