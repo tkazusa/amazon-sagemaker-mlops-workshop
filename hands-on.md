@@ -23,12 +23,25 @@
 - CodePipelineのパイプライン
 
 #### train-model-pipeline.yml
-- Lambda 学習用のファンクション
+- Lambda SageMakerの学習ジョブを立ち上げる関数
     - SageMaker: 学習ジョブ投げてる
     - CloudWatch: 学習ジョブをモニタリング
-    - CodePipeline: 学習が成功したかを通知
+    - CodePipeline: 既存のcodepipelineのJobIDを確認、通知。学習が成功したかを通知
     
+- Lambda CodePipeline の監視を行う関数
+    - SageMaker: Job description を見に行ってる
+    - CloudWatch: モニタリングをdisableしている
+    - Codepipeline: pipelineのステータスを監視し、承認するかを表示
 
+- Lambda permission: 監視関数がLambdaを叩けるようにする許可
+- CloudWatch Events: 学習ジョブを関ししていて、終わったらpipelineに知らせる
+- CodePipeline: deployのためのpipelineを作る
+    - Source: S3 モデルが置かれたらに置かれたら
+    - Train: 学習用Lambdaを発火、
+    - TrainApproval: マニュアル操作、何を見て判断？
+    - DeployDev: CloudFormationを呼び出す、deploy-model-dev.yml。こいつがSageMakerのEndpointをデプロイ。
+    - DeployApproval: マニュアル操作、何を見て判断？
+    - CloudFormationを呼び出す、deploy-model-prd.yml。こいつがSageMakerのEndpointをデプロイ。
 
 #### deploy-model-dev.yml
 - SageMaker のモデル: Endpointで使う
