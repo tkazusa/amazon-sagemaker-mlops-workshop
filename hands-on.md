@@ -2,7 +2,7 @@
 - 活用するサービスが多いので CloudFormation でハンズオンの準備をする
 
 ## 使うスクリプトの整理
-## m.yml
+#### m.yml
 - Scikit-base のECRのリポジトリ
 - Iris-model のECRのリポジトリ
 - MLOps S3 バケット
@@ -18,6 +18,25 @@
 - CloudBuild用のIAMロール
 - SageMaker用のIAMロール
 
+#### build-image.yml
+- CodeBuildのプロジェクト
+- CodePipelineのパイプライン
+
+#### train-model-pipeline.yml
+- Lambda ファンクション
+- CodePipelineのパイプライン
+
+
+#### deploy-model-dev.yml
+- SageMaker のモデル: Endpointで使う
+- EndpointConfig: エンドポイントの設定。Endpointで使う
+- SageMaker Endpoint
+
+#### deploy-model-prd.yml
+- SageMaker EndpointConfig: エンドポイントの設定。Endpointで使う
+- SageMaker Endpoint
+- AutoScaling Target
+- AutScaling Scaling policy
 
 
 ## ハンズオンの内容
