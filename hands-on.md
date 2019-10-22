@@ -23,8 +23,11 @@
 - CodePipelineのパイプライン
 
 #### train-model-pipeline.yml
-- Lambda ファンクション
-- CodePipelineのパイプライン
+- Lambda 学習用のファンクション
+    - SageMaker: 学習ジョブ投げてる
+    - CloudWatch: 学習ジョブをモニタリング
+    - CodePipeline: 学習が成功したかを通知
+    
 
 
 #### deploy-model-dev.yml
