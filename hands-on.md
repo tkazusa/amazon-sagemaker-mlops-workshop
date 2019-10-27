@@ -56,6 +56,13 @@
 
 
 ## ハンズオンの内容
+- s3へはアウトプットとして何が残る？
+
+- CloudFormation で m.yml の中身を実行
+
+
+
+    - 
 ### 01_BuildBaseImage
 #### 01_Creating a Scikit-Learn Base Image
 - このディレクトリで下記を作成。
