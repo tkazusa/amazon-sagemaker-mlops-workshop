@@ -117,7 +117,7 @@ US East (N. Virginia) | [![Launch MLOps solution in us-east-1](imgs/cloudformati
     - CloudWatchのmlops-job-monitor-${ModelName} で学習ジョブをモニタリング
     - CodePipelinedで既存のcodepipelineのJobIDを確認、通知。学習が成功したかを通知
     
-- Lambda CodePipeline の監視を行う関数
+- Lambda:mlops-job-monitor-${ModelName}、CodePipeline の監視を行う関数
     - SageMaker: Job description を見に行ってる
     - CloudWatch: モニタリングをdisableしている
     - Codepipeline: pipelineのステータスを監視し、承認するかを表示
