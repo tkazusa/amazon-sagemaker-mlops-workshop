@@ -3,11 +3,12 @@
 
 ## 使うスクリプトの整理
 #### m.yml
-- Scikit-base のECRのリポジトリ
-- Iris-model のECRのリポジトリ
-- MLOps S3 バケット
-- CodeCommit のリポジトリ
-- ノートブックインスタンスのlifecycle configで下記を設定。1ノートブック、1Codepipelineで運用。複数人でやる場合には？
+- MLOpsScikitImageRepo: Scikit-base のECRのリポジトリ、この段階ではイメージなし
+- MLOpsIrisModelRepo: Iris-model のECRのリポジトリ
+- MLOpsBucket:MLOps S3 バケット　この段階では中身なし
+- MLOpsRepo: CodeCommit のリポジトリ
+- IAWorkshopNotebookInstance: ノートブックインスタンス
+- IAWorkshopNotebookInstanceLifecycleConfig: ノートブックインスタンスのlifecycle configで下記を設定。1ノートブック、1Codepipelineで運用。複数人でやる場合には？
     - サブネットの定義
     - セキュリティグループの定義
     - ノートブックインスタンスのライフサイクルの設定
@@ -15,8 +16,9 @@
             - build-image.yml sikit_base
             - build-image.yml iris_model
             - train-model-pipeline.yml 
-- CloudBuild用のIAMロール
-- SageMaker用のIAMロール
+- MLOpsCodeBuild: CloudBuild用のIAMロール
+- MLOps: SageMaker用のIAMロール
+
 
 #### build-image.yml
 - CodeBuildのプロジェクト
@@ -67,8 +69,63 @@ Region| Launch
 US East (N. Virginia) | [![Launch MLOps solution in us-east-1](imgs/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=AIWorkshop&templateURL=https://s3.amazonaws.com/aws-ai-ml-aod-latam/mlops-workshop/m.yml)
 
 
+#### build-image.yml scikit-base が走る
+- CFn の scikit-base スタックができる
+    - CodePipelineのパイプライン
+        - GetSource: CodeCommitのブランチがソース
+        - Build: Codebuildをキック  
+    - CodeBuildのプロジェクト
+        - lab1 で作る buildspec.yml を参している
+        - lab1の中で下記スクリプトを作成してコミット
+            - Dockerfile
+            - app.py
+            - buildspec.yml
 
-    - 
+#### build-image.yml scikit-base が走る
+- CFn の iris-model スタックができる
+    - DeployPipeline: CodePipelineのパイプライン
+        - GetSource: CodeCommitのブランチがソース
+        - Build: Codebuildをキック  
+    - BuildImageProject: CodeBuildのプロジェクト
+        - lab1 で作る buildspec.yml を参している
+        - lab1の中で下記スクリプトを作成してコミット
+            - Dockerfile
+            - model.py
+            - buildspec.yml
+            
+#### train-model-pipeline.yml　が走る           
+- CFn の iris-train-pipeline スタックができる
+    - iris-train-pipeline:CodePipeline のパイプライン
+        - Source: Amazon S3 
+        - Train: Lambda、mlops-job-launcher-{modelname}
+        - TrainApproval: Manual approval 
+        - DeployModelDev: CFn
+            - deploy-model-dev.yml を参照
+            - SageMaker のモデル: Endpointで使う
+            - EndpointConfig: エンドポイントの設定。Endpointで使う
+            - SageMaker Endpoint
+        - DeployApproval: Manual approval
+        - DeployPrd: CFn
+            - deploy-model-prd.yml を参照
+            - SageMaker EndpointConfig: エンドポイントの設定。Endpointで使う
+            - SageMaker Endpoint
+            - AutoScaling Target
+            - AutScaling Scaling policy
+           
+- Lambda: mlops-job-launcher-{modelname}、SageMakerの学習ジョブを立ち上げる関数
+    - SageMakerの学習ジョブ投げる
+    - CloudWatchのmlops-job-monitor-${ModelName} で学習ジョブをモニタリング
+    - CodePipelinedで既存のcodepipelineのJobIDを確認、通知。学習が成功したかを通知
+    
+- Lambda CodePipeline の監視を行う関数
+    - SageMaker: Job description を見に行ってる
+    - CloudWatch: モニタリングをdisableしている
+    - Codepipeline: pipelineのステータスを監視し、承認するかを表示
+
+- Lambda permission: 監視関数がLambdaを叩けるようにする許可
+- CloudWatch Events Rule: 学習ジョブを関ししていて、終わったらpipelineに知らせる
+    - Lambda の mlops-job-monitor-${ModelName} をターゲットにしている
+
 ### 01_BuildBaseImage
 #### 01_Creating a Scikit-Learn Base Image
 - このディレクトリで下記を作成。
