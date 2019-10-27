@@ -60,6 +60,12 @@
 
 - CloudFormation で m.yml の中身を実行
 
+1. Select the below to launch CloudFormation stack.
+
+Region| Launch
+------|-----
+US East (N. Virginia) | [![Launch MLOps solution in us-east-1](imgs/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=AIWorkshop&templateURL=https://s3.amazonaws.com/aws-ai-ml-aod-latam/mlops-workshop/m.yml)
+
 
 
     - 
